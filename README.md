@@ -56,8 +56,28 @@ image_url = response.data.data[0].url;
 ```
 Similar to the edits endpoint, the input image must be a square PNG image less than 4MB in size.
 
-#### Content Moderation
+### Content Moderation
 Prompts and images are filtered based on our [content policy](https://labs.openai.com/policies/content-policy), returning an error when a prompt or image is flagged. 
 If you have any feedback on false positives or related issues, please contact us through [OpenAI help center](https://help.openai.com/en/).
 
+### Error Handling
+API requests can potentially return errors due to invalid inputs, rate limits, or other issues. These errors can be handled with a 
+`try...catch` statement, and the error details can be found in either `error.response` or `error.message`:
 
+```
+try {
+  const response = await openai.createImageVariation(
+    fs.createReadStream("image.png"),
+    1,
+    "1024x1024"
+  );
+  console.log(response.data.data[0].url);
+} catch (error) {
+  if (error.response) {
+    console.log(error.response.status);
+    console.log(error.response.data);
+  } else {
+    console.log(error.message);
+  }
+}
+```
